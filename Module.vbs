@@ -1,3 +1,12 @@
+' https://stackoverflow.com/questions/6960434/timing-delays-in-vba
+Sub WaitFor(NumOfSeconds As Double)
+  Dim SngSec as Double
+  SngSec = Timer + NumOfSeconds
+  Do While Timer < SngSec
+    DoEvents
+  Loop
+End Sub
+
 Sub moveLeg(ByRef name, ByRef i, ByRef legLength, ByRef CellIdx, ByRef startIdx)
   TimeNum = 0.1
   
@@ -31,15 +40,6 @@ Sub moveLeg(ByRef name, ByRef i, ByRef legLength, ByRef CellIdx, ByRef startIdx)
       Cells(i, CellIdx * 2).Value = name
       Exit Do
     End if
-  Loop
-End Sub
-
-' https://stackoverflow.com/questions/6960434/timing-delays-in-vba
-Sub WaitFor(NumOfSeconds As Double)
-  Dim SngSec as Double
-  SngSec = Timer + NumOfSeconds
-  Do While Timer < SngSec
-    DoEvents
   Loop
 End Sub
 
@@ -88,7 +88,7 @@ Sub initalize()
   legLength_tmp = Range("D6:D6").Value
 
   ' 새롭게 사다리를 생성하기 전에 이전에 저장된 사다리 삭제
-  if personLength_tmp <> "" and legLength_tmp <> "" Then
+  If IsNumeric(personLength_tmp) and IsNumeric(legLength_tmp) Then
     For i = 1 To personLength_tmp * 2 - 1
       ' 꽝, 당첨 부분과 이름이 입력되는 부분까지 삭제하기 위하여 +2 추가
       For j = 0 To legLength_tmp + 2
@@ -106,7 +106,7 @@ Sub initalize()
   legLength = InputBox("사다리 크기", "사다리타기", "20")
 
   ' 값이 존재하는 경우에만 동작
-  If personLength <> "" and legLength <> "" Then
+  if IsNumeric(personLength) and IsNumeric(legLength) Then
     Range("D5:D5").Value = personLength
     Range("D6:D6").Value = legLength
 
@@ -137,28 +137,43 @@ Sub legMakeAutomation()
 
   personLength = Range("D5:D5").Value
   legLength = Range("D6:D6").Value
+  legCount = WorksheetFunction.Ceiling(legLength / 2, 1)
 
   ' C열에 해당하는 사다리부터 수정을 해야하기 때문에 2부터 시작
   For i = 2 To personLength
     ' startIdx 값인 10에 legLength만큼 for loop를 돌면 당첨, 꽝에 해당하는 부분까지 돌기 때문에 -1 사용
     For j = 0 To legLength - 1
-      ' TODO: 랜덤으로 사다리 만드는 기능 개발
       Cells(startIdx + j, i * 2 - 1).Value = "l"
+    Next
+  Next
+              
+  For i = 2 To personLength
+  ' 양 옆에 사다리가 없으면 만들고, 있으면 pass하는 방법 사용 '
+    For j = 0 To legCount
+      ' 자정으로부터 지난 초를 의미하는 Timer 값으로 seed 값 지정 (소수점 2번쨰 자리로 계속 바뀌는 값)
+      ' 직접 바꾸지 않으면 seed 값이 고정되어 있어 똑같은 결과가 나오므로 주기적으로 변경
+      Randomize Timer
+
+      ' Int( ( upperbound - lowerbound + 1 ) * Rnd + lowerbound )
+      randomRnd = Int(((legLength + startIdx - 1) - startIdx + 1) * Rnd() + startIdx)
+
+      ' 양 옆에 사다리가 존재하는지 유무 체크하고 없으면 생성
+      If Cells(randomRnd, i * 2 - 3) <> "-" And Cells(randomRnd, i * 2 + 1) <> "-" Then
+        Cells(randomRnd, i * 2 - 1).Value = "-"
+      End If
     Next
   Next
 End Sub
 
 Sub setRandomWinner()
+  ' 자정으로부터 지난 초를 의미하는 Timer 값으로 seed 값 지정 (소수점 2번쨰 자리로 계속 바뀌는 값)
+  ' 직접 바꾸지 않으면 seed 값이 고정되어 있어 똑같은 결과가 나오므로 주기적으로 변경
+  Randomize Timer
+
   personLength = Range("D5:D5").Value
   legLength = Range("D6:D6").Value
   startIdx = 10
-
-  Do While 1
-    randomRnd = Int((personLength) * Rnd() + 1)
-    if randomRnd <> 0 Then
-      Exit Do
-    End If
-  Loop
+  randomRnd = Int((personLength) * Rnd() + 1)
 
   For i = 1 To personLength
     if i = randomRnd Then
