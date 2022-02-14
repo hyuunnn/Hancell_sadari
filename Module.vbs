@@ -1,3 +1,5 @@
+Public Declare Function GetTickCount64 Lib "kernel32.dll" () As Long
+
 ' https://stackoverflow.com/questions/6960434/timing-delays-in-vba
 Sub WaitFor(NumOfSeconds As Double)
   Dim SngSec as Double
@@ -152,7 +154,7 @@ Sub legMakeAutomation()
     For j = 0 To legCount
       ' 자정으로부터 지난 초를 의미하는 Timer 값으로 seed 값 지정 (소수점 2번쨰 자리로 계속 바뀌는 값)
       ' 직접 바꾸지 않으면 seed 값이 고정되어 있어 똑같은 결과가 나오므로 주기적으로 변경
-      Randomize Timer
+      Randomize GetTickCount64() + Timer
 
       ' Int( ( upperbound - lowerbound + 1 ) * Rnd + lowerbound )
       randomRnd = Int(((legLength + startIdx - 1) - startIdx + 1) * Rnd() + startIdx)
