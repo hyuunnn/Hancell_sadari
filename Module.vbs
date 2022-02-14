@@ -173,7 +173,7 @@ Sub setRandomWinner()
   personLength = Range("D5:D5").Value
   legLength = Range("D6:D6").Value
   startIdx = 10
-  randomRnd = Int((personLength) * Rnd() + 1)
+  randomRnd = Int(personLength * Rnd() + 1)
 
   For i = 1 To personLength
     if i = randomRnd Then
