@@ -1,6 +1,6 @@
 ## Hancell_ghost-leg
 
-[image](image.png)
+<img src="image.png" />
 
 군대 인트라넷 PC에서 배식조를 뽑기 위해 한셀 vbs로 제작한 프로그램?
 
