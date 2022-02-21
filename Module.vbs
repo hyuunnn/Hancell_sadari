@@ -168,7 +168,7 @@ Sub legMakeAutomation()
 End Sub
 
 Sub setRandomWinner()
-  ' 자정으로부터 지난 초를 의미하는 Timer 값으로 seed 값 지정 (소수점 2번쨰 자리로 계속 바뀌는 값)
+  ' 자정으로부터 지난 초를 의미하는 Timer 값으로 seed 값 지정 (소수점 2번째 자리로 계속 바뀌는 값)
   ' 직접 바꾸지 않으면 seed 값이 고정되어 있어 똑같은 결과가 나오므로 주기적으로 변경
   Randomize Timer
 
