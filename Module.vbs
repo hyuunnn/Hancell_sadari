@@ -179,7 +179,7 @@ Sub setRandomWinner()
 
   For i = 1 To personLength
     if i = randomRnd Then
-      Cells(startIdx + legLength, i * 2).Value = "당점"
+      Cells(startIdx + legLength, i * 2).Value = "당첨"
     Else
       Cells(startIdx + legLength, i * 2).Value = "꽝"
     End If
