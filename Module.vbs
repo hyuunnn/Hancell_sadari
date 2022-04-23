@@ -10,7 +10,7 @@ Sub WaitFor(NumOfSeconds As Double)
 End Sub
 
 Sub moveLeg(ByRef name, ByRef i, ByRef legLength, ByRef CellIdx, ByRef startIdx)
-  TimeNum = 0.1
+  TimeNum = Range("E3:E3").Value
   
   Do While 1
     ' 오른쪽에 있는 경우 +1 처리
@@ -184,4 +184,10 @@ Sub setRandomWinner()
       Cells(startIdx + legLength, i * 2).Value = "꽝"
     End If
   Next
+End Sub
+
+Sub setMoveTime()
+  maxNum = 100
+  Set scrollObj = ActiveSheet.ScrollBars("스크롤 막대 6")
+  Range("E3:E3").Value = (maxNum - scrollObj.Value) / 100
 End Sub
